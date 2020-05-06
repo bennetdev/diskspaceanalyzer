@@ -55,7 +55,7 @@ class View:
                     dir_name = dir_name[:-1]
                 dir_name += "..."
             label = self.canvas.create_text(((x1 + x2) / 2, y2+10), text=dir_name, tag=index, fill="#dddddd")
-            self.rectangles.append(self.canvas.create_rectangle(x1, y1, x2, y2, fill="#e43f5a", tag=index))
+            self.rectangles.append(self.canvas.create_rectangle(x1, y1, x2, y2, fill="#e43f5a", tag=index, outline="#dddddd"))
 
     def get_percent_bar_cords(self, percent, index):
 
