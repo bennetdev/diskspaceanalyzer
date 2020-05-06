@@ -1,13 +1,10 @@
 import tkinter as tk
 from tkinter import *
 from directoryReader import DirectoryReader
-from directoryReader import DirectoryReader
 from tkinter import filedialog
-from tkinter import ttk
 import sys
 import threading
 from ready import Ready
-import math
 
 class View:
     def __init__(self, master, width, height):
@@ -27,6 +24,7 @@ class View:
         self.button = tk.Button(self.frame, text="Test", command=self.pickFile)
         self.button.pack(side=LEFT)
         self.canvas = tk.Canvas(self.frame, width=800, height=500, scrollregion=(0, 0, 0, 500), bg="grey")
+        self.canvas.bind("<Button 1>", self.click_canvas)
         self.canvas.pack()
         self.master.bind_all("<MouseWheel>", self._on_mousewheel)
         self.scrollbar = Scrollbar(self.frame, orient=VERTICAL)
@@ -69,8 +67,8 @@ class View:
 
             print(x1, x2, y1, y2, per)
             #print(per, self.colors[index], height)
-            self.rectangles.append(self.canvas.create_rectangle(x1, y1, x2, y2, fill="red"))
-            self.labels.append(self.canvas.create_text(((x1 + x2) / 2, y2+10), text=dir_name))
+            label = self.canvas.create_text(((x1 + x2) / 2, y2+10), text=dir_name, tag=index)
+            self.canvas.create_rectangle(x1, y1, x2, y2, fill="red", tag=index)
         #self.canvas.create_rectangle(135, 250, 100, 400, fill="green")
 
     def get_percent_bar_cords(self, percent, index):
@@ -85,10 +83,18 @@ class View:
     def show_dirs(self):
         print(self.directory_reader.sizes_percent)
         self.create_percent_bars(self.directory_reader.sizes_percent)
-        scroll_size_y = (((len(self.rectangles) - (len(self.rectangles) % 7)) / 7) + (len(self.rectangles) % 7)) * 500
+        rest_elements = len(self.rectangles) % 14
+        scroll_size_y = int((len(self.rectangles) / 14)) * 400
+        if rest_elements > 0 and rest_elements < 8:
+            scroll_size_y += 250
+        elif rest_elements > 0:
+            scroll_size_y += 500
+
+        print(scroll_size_y)
         self.canvas.config(scrollregion=(0, 0, 0, scroll_size_y))
     def start(self):
         print("start")
+        self.canvas.delete("all")
         thread = threading.Thread(name="thread1", target=self.directory_reader.read_dir)
         thread.start()
         ready = Ready(self.directory_reader, self, thread)
@@ -98,6 +104,17 @@ class View:
 
     def _on_mousewheel(self, event):
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    def click_canvas(self, event):
+        if self.canvas.find_withtag(CURRENT):
+            tags = self.canvas.gettags(CURRENT)
+            index = int(tags[0])
+            if self.directory_reader.sub_dirs[self.directory_reader.level][index] != "Files":
+                thread_next = threading.Thread(name="thread_next", target=lambda: self.directory_reader.next_path(index))
+                ready = Ready(self.directory_reader, self, thread_next)
+                thread_ready = threading.Thread(target=ready.start_after_thread)
+                thread_next.start()
+                thread_ready.start()
 
 root = tk.Tk()
 view = View(root, 800, 800)

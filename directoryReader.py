@@ -8,6 +8,7 @@ class DirectoryReader():
         self.sub_dirs = []
         self.sub_dirs_sizes = []
         self.sizes_percent = []
+        self.dir_sizes = []
         self.level = -1
 
     def read_dir(self):
@@ -23,8 +24,9 @@ class DirectoryReader():
                 sub_dirs_sizes.append(self.get_dir_size(sub_dir))
         self.sub_dirs.append(sub_dirs)
         self.sub_dirs_sizes.append(sub_dirs_sizes)
-        self.set_sizes_percent()
         self.level += 1
+        self.set_current_dir_size()
+        self.set_sizes_percent()
         #print(self.sub_dirs, self.sub_dirs_sizes)
         self.sort_dirs_by_size()
 
@@ -42,6 +44,23 @@ class DirectoryReader():
 
     def change_dir(self, path):
         self.path = path
+
+    def set_current_dir_size(self):
+        size = 0
+        for root, dirs, files in os.walk(self.path):
+            if root != self.path:
+                break
+            for file_name in files:
+                file = os.path.join(root, file_name)
+                if len(file) > 255:
+                    file = "\\\\?\\" + file
+                size += os.path.getsize(file)
+        size /= (1024 * 1024)
+        size = round(size, 2)
+        self.sub_dirs[self.level].append("Files")
+        print("current")
+        self.sub_dirs_sizes[self.level].append(size)
+        print(self.sub_dirs_sizes)
 
     def last_path(self):
         new_sub_dirs = []
@@ -69,7 +88,6 @@ class DirectoryReader():
         return self.sub_dirs[self.level][index]
 
     def set_sizes_percent(self):
-
         for index, sizes in enumerate(self.sub_dirs_sizes):
             if index >= len(self.sizes_percent):
                 sizes_sum = 0
