@@ -19,7 +19,7 @@ class View:
         self.frame = tk.Frame(self.master, width=width, height=height)
         self.frame.pack(expand=True)
         self.colors = ["red", "green", "blue", "yellow", "black", "orange"]
-        self.canvas = tk.Canvas(self.frame, width=800, height=500, scrollregion=(0, 0, 0, 500), bg="grey")
+        self.canvas = tk.Canvas(self.frame, width=800, height=500, scrollregion=(0, 0, 0, 500), bg="#1f4068")
         self.canvas.bind("<Button 1>", self.click_canvas)
         self.canvas.pack()
         self.master.bind_all("<MouseWheel>", self._on_mousewheel)
@@ -45,7 +45,7 @@ class View:
 
     def create_percent_bars(self, percents):
         self.canvas.delete("all")
-        self.canvas.create_text(15, 10, text="Back", tag="back")
+        self.canvas.create_text(15, 10, text="Back", tag="back", fill="#dddddd")
         for index, per in enumerate(percents[self.directory_reader.level]):
             x1, y1, x2, y2 = self.get_percent_bar_cords(per, index)
             dir_path = self.directory_reader.sub_dirs[self.directory_reader.level][index]
@@ -54,8 +54,8 @@ class View:
                 while len(dir_name) > 12:
                     dir_name = dir_name[:-1]
                 dir_name += "..."
-            label = self.canvas.create_text(((x1 + x2) / 2, y2+10), text=dir_name, tag=index)
-            self.rectangles.append(self.canvas.create_rectangle(x1, y1, x2, y2, fill="red", tag=index))
+            label = self.canvas.create_text(((x1 + x2) / 2, y2+10), text=dir_name, tag=index, fill="#dddddd")
+            self.rectangles.append(self.canvas.create_rectangle(x1, y1, x2, y2, fill="#e43f5a", tag=index))
 
     def get_percent_bar_cords(self, percent, index):
 
