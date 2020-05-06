@@ -27,7 +27,6 @@ class DirectoryReader():
         self.level += 1
         self.set_current_dir_size()
         self.set_sizes_percent()
-        #print(self.sub_dirs, self.sub_dirs_sizes)
         self.sort_dirs_by_size()
 
     def get_dir_size(self, path):
@@ -58,9 +57,7 @@ class DirectoryReader():
         size /= (1024 * 1024)
         size = round(size, 2)
         self.sub_dirs[self.level].append("Files")
-        print("current")
         self.sub_dirs_sizes[self.level].append(size)
-        print(self.sub_dirs_sizes)
 
     def last_path(self):
         new_sub_dirs = []
@@ -75,9 +72,6 @@ class DirectoryReader():
         self.sub_dirs = new_sub_dirs
         self.sub_dirs_sizes = new_sub_dirs_sizes
         self.sizes_percent = new_sizes_percent
-        #print(self.sub_dirs)
-        #print(self.sub_dirs_sizes)
-        #print(self.sizes_percent)
         self.level -= 1
 
 
@@ -97,23 +91,12 @@ class DirectoryReader():
                 for size in sizes:
                     sizes_percent.append(round(size / sizes_sum, 4))
                 self.sizes_percent.append(sizes_percent)
-        #print(self.sizes_percent)
-
-    def ausgabe(self):
-        print("\n\n")
-        for dirs_index, dirs in enumerate(self.sub_dirs):
-            for dir_index, dir in enumerate(dirs):
-                print(dir_index,dir, "Size: " + str(self.sub_dirs_sizes[dirs_index][dir_index]) + "MB", "Relative: " + str(self.sizes_percent[dirs_index][dir_index] * 100) + "%")
-            print("\n\n")
 
     def sort_dirs_by_size(self):
-        print("test2")
         dirs_sorted = []
         sizes_sorted = []
         for index, dir in enumerate(self.sub_dirs):
             size_sorted, dir_sorted = (list(t) for t in zip(*sorted(zip(self.sub_dirs_sizes[index], dir), reverse=True)))
-            print(dir_sorted)
-            print(size_sorted)
             dirs_sorted.append(dir_sorted)
             sizes_sorted.append(size_sorted)
         self.sub_dirs = dirs_sorted
@@ -121,9 +104,3 @@ class DirectoryReader():
         self.sizes_percent = []
         self.set_sizes_percent()
 
-
-    def update_dirs(self):
-        pass
-
-    def sort_by_size(self):
-        pass
