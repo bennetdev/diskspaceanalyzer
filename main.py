@@ -1,4 +1,3 @@
-from directoryReader import DirectoryReader
 import tkinter as tk
 from gui import View
 

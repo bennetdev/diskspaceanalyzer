@@ -4,7 +4,7 @@ from directoryReader import DirectoryReader
 from tkinter import filedialog
 import sys
 import threading
-from ready import Ready
+from thread_manager import Ready
 
 class View:
     def __init__(self, master, width, height):
