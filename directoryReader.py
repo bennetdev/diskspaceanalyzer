@@ -19,7 +19,7 @@ class DirectoryReader():
                 break
             for dir in dirs:
                 sub_dir = os.path.join(root, dir)
-                print("root: " + root, "dir: " + dir, sub_dir)
+                #print("root: " + root, "dir: " + dir, sub_dir)
                 sub_dirs.append(sub_dir)
                 sub_dirs_sizes.append(self.get_dir_size(sub_dir))
         self.sub_dirs.append(sub_dirs)

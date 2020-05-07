@@ -78,7 +78,7 @@ class View:
             scroll_size_y += 250
         elif rest_elements > 0:
             scroll_size_y += 500
-        print(scroll_size_y)
+        #print(scroll_size_y)
 
         self.canvas.config(scrollregion=(0, 0, 0, scroll_size_y))
     def start(self):
