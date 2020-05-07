@@ -16,6 +16,7 @@ class View:
 
 
         master.title("MemoryAnalyzer")
+        self.master.resizable(False, False)
         self.frame = tk.Frame(self.master, width=width, height=height)
         self.frame.pack(expand=True)
         self.colors = ["red", "green", "blue", "yellow", "black", "orange"]
