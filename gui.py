@@ -12,7 +12,7 @@ class View:
         self.height = height
         self.master = master
         self.bar_height = 100
-
+        self.display_size_index = -1
 
 
         master.title("MemoryAnalyzer")
@@ -21,6 +21,7 @@ class View:
         self.colors = ["red", "green", "blue", "yellow", "black", "orange"]
         self.canvas = tk.Canvas(self.frame, width=800, height=500, scrollregion=(0, 0, 0, 500), bg="#1f4068")
         self.canvas.bind("<Button 1>", self.click_canvas)
+        self.canvas.bind("<Motion>", self.hover_canvas)
         self.canvas.pack()
         self.master.bind_all("<MouseWheel>", self._on_mousewheel)
         self.scrollbar = Scrollbar(self.frame, orient=VERTICAL)
@@ -46,6 +47,7 @@ class View:
     def create_percent_bars(self, percents):
         self.canvas.delete("all")
         self.canvas.create_text(15, 10, text="Back", tag="back", fill="#dddddd")
+        self.canvas.create_text(700, 10, text="Size: ", tag="size", fill="#dddddd")
         for index, per in enumerate(percents[self.directory_reader.level]):
             x1, y1, x2, y2 = self.get_percent_bar_cords(per, index)
             dir_path = self.directory_reader.sub_dirs[self.directory_reader.level][index]
@@ -68,6 +70,7 @@ class View:
 
     def show_dirs(self):
         self.create_percent_bars(self.directory_reader.sizes_percent)
+        self.display_size_index = -1
         rest_elements = len(self.rectangles) % 14
         scroll_size_y = int((len(self.rectangles) / 14)) * 400
         if rest_elements > 0 and rest_elements < 8:
@@ -113,3 +116,11 @@ class View:
                     thread_next.start()
                     thread_ready.start()
 
+    def hover_canvas(self, event):
+        if self.canvas.find_withtag(CURRENT):
+            tags = self.canvas.gettags(CURRENT)
+            if tags[0] != "back" and tags[0] != "size":
+                index = int(tags[0])
+                if self.display_size_index != index:
+                    self.canvas.itemconfigure("size", text="Size: " + str(self.directory_reader.sub_dirs_sizes[self.directory_reader.level][index]) + "MB, " + str(self.directory_reader.sizes_percent[self.directory_reader.level][index]) + "%")
+                    self.display_size_index = index
