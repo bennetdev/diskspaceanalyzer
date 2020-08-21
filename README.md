@@ -1,5 +1,5 @@
-# memoryanalyzer
-Memory analysing tool
+# diskspaceanalyzer
+Disk-space analysing tool
 
 # Step 1:
 Run the main.py file.
